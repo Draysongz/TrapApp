@@ -1,0 +1,8 @@
+{
+    "cursor.chat.alwaysSearchWeb": false,
+    "cursor.general.enableShadowWorkspace": true,
+    "cursor.general.gitGraphIndexing": "enabled",
+    "cursor.chat.smoothStreaming": true,
+    "cursor.chat.showSuggestedFiles": true,
+    "cursor.chat.premiumChatAutoScrollWhenAtBottom": true
+}
