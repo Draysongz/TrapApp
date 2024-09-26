@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
   try {
     const result = await query(
-      'UPDATE users SET clicker_balance = clicker_balance + $1 WHERE telegram_id = $2 RETURNING clicker_balance',
+      'UPDATE users SET clicker_balance = COALESCE(clicker_balance, 0) + $1 WHERE telegram_id = $2 RETURNING clicker_balance',
       [amount, telegramId]
     );
 
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ newBalance: result.rows[0].clicker_balance });
+    return NextResponse.json({ newBalance: Number(result.rows[0].clicker_balance) });
   } catch (error) {
     console.error('Database Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

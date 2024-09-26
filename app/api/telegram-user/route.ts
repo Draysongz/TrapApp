@@ -18,11 +18,23 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    const userProfilePhotos = await bot.getUserProfilePhotos(parseInt(userId), { limit: 1 });
+    let photoUrl: string | null = null;
+
+    if (userProfilePhotos.photos.length > 0) {
+      const fileId = userProfilePhotos.photos[0][0].file_id;
+      const file = await bot.getFile(fileId);
+      if (file.file_path) {
+        photoUrl = `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${file.file_path}`;
+      }
+    }
+
     const userData = {
       id: chatMember.user.id,
       username: chatMember.user.username,
       firstName: chatMember.user.first_name,
       lastName: chatMember.user.last_name,
+      photoUrl
     };
 
     return NextResponse.json({ user: userData });

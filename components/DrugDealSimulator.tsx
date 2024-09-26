@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNotifications } from '../contexts/NotificationContext';
 import { useSounds } from './SoundEffects';
 import { useBalance } from '../contexts/BalanceContext'; // Import useBalance
@@ -20,7 +20,6 @@ interface Outcome {
   reputation: number;
   nextScenario?: number;
 }
-
 
 const scenarios: Scenario[] = [
   {
@@ -64,11 +63,15 @@ const DrugDealSimulator: React.FC = () => {
   const [reputation, setReputation] = useState(50);
   const { addNotification } = useNotifications();
   const { playClick, playSuccess } = useSounds();
-  const { balance, updateBalance } = useBalance(); // Use balance context
+  const { mainBalance, updateMainBalance, fetchBalances } = useBalance(); // Use mainBalance instead of balance
 
-  const handleChoice = (outcome: Outcome) => {
+  useEffect(() => {
+    fetchBalances();
+  }, [fetchBalances]);
+
+  const handleChoice = async (outcome: Outcome) => {
     playClick();
-    updateBalance(outcome.money); // Update balance using balance context
+    await updateMainBalance(outcome.money); // Use updateMainBalance instead of updateBalance
     setReputation((prev) => Math.min(100, Math.max(0, prev + outcome.reputation)));
     addNotification(outcome.text);
 
@@ -82,13 +85,16 @@ const DrugDealSimulator: React.FC = () => {
     if (outcome.money > 0 || outcome.reputation > 0) {
       playSuccess();
     }
+
+    // Fetch updated balances after the choice
+    fetchBalances();
   };
 
   return (
     <div className="border border-green-400 p-4 space-y-4">
       <h2 className="text-lg font-bold text-center">Drug Deal Simulator</h2>
       <div className="flex justify-between mb-4">
-        <p>Balance: ${balance.toFixed(2)}</p> {/* Display balance from context */}
+        <p>Balance: ${typeof mainBalance === 'number' ? mainBalance.toFixed(2) : '0.00'}</p>
         <p>Reputation: {reputation}</p>
       </div>
       <p className="mb-4">{currentScenario.text}</p>

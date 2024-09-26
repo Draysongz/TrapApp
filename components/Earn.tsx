@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useBalance } from '../contexts/BalanceContext';
 import DailyRewards from './DailyRewards';
 import DrugLabClicker from './DrugLabClicker';
@@ -11,12 +11,9 @@ import MarketTrends from './MarketTrends';
 import DrugDealSimulator from './DrugDealSimulator';
 import TerritoryExpansion from './TerritoryExpansion';
 import { gameDescriptions } from './GameInfo';
+import { useNotifications } from '../contexts/NotificationContext';
 
-const games: Array<{
-  name: string;
-  component: React.ComponentType;
-  icon: string;
-}> = [
+const games = [
   { name: 'Drug Lab', component: DrugLabClicker, icon: '🧪' },
   { name: 'Slots', component: SlotMachine, icon: '🎰' },
   { name: 'Market', component: MarketTrends, icon: '📈' },
@@ -24,13 +21,24 @@ const games: Array<{
   { name: 'Territory', component: TerritoryExpansion, icon: '🏙️' },
 ];
 
-const EarnContent: React.FC = () => {
+const Earn: React.FC = () => {
   const [currentGame, setCurrentGame] = useState(0);
   const [showInfo, setShowInfo] = useState(true);
-  const { balance } = useBalance();
-  
-  const GameComponent = games[currentGame].component;
+  const { mainBalance, drugMoneyBalance, fetchBalances, updateMainBalance, updateDrugMoneyBalance } = useBalance();
+  const { addNotification } = useNotifications();
 
+  // Add this function
+  const addDebugBalance = () => {
+    updateMainBalance(1000);
+    updateDrugMoneyBalance(500);
+    addNotification('Added debug balance');
+    fetchBalances();
+  };
+
+  useEffect(() => {
+    fetchBalances();
+  }, [fetchBalances]);
+  
   return (
     <div className="flex flex-col h-full">
       <DailyRewards />
@@ -38,7 +46,17 @@ const EarnContent: React.FC = () => {
       <div className="flex-grow overflow-hidden flex flex-col">
         <div className="flex justify-between items-center mb-2 px-2">
           <h2 className="text-lg font-bold text-green-400">Earn</h2>
-          <div className="text-green-400 font-bold">Balance: ${balance.toFixed(2)}</div>
+          <div className="text-green-400 font-bold">
+            <div>Main Balance: ${typeof mainBalance === 'number' ? mainBalance.toFixed(2) : '0.00'}</div>
+            <div>Drug Money: ${typeof drugMoneyBalance === 'number' ? drugMoneyBalance.toFixed(2) : '0.00'}</div>
+            {/* Add this button for debugging */}
+            <button 
+              onClick={addDebugBalance}
+              className="px-2 py-1 bg-red-600 text-white text-xs rounded mt-1"
+            >
+              Add Debug Balance
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-5 gap-1 mb-4">
           {games.map((game, index) => (
@@ -74,16 +92,10 @@ const EarnContent: React.FC = () => {
               </div>
             </div>
           )}
-          <GameComponent />
+          {React.createElement(games[currentGame].component)}
         </div>
       </div>
     </div>
-  );
-};
-
-const Earn: React.FC = () => {
-  return (
-    <EarnContent />
   );
 };
 

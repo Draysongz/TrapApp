@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --config .eslintrc.json",
-    "migrate": "ts-node -r tsconfig-paths/register run-migration.ts",
+    "migrate": "node --experimental-specifier-resolution=node --loader ts-node/esm run-migration.ts",
     "insert-test-data": "ts-node -r dotenv/config insert-test-data.ts"
   },
   "dependencies": {
@@ -36,5 +36,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.2"
-  }
+  },
+  "type": "module"
 }

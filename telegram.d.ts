@@ -6,9 +6,14 @@ export interface TelegramWebApp {
     notificationOccurred: (type: 'error' | 'success' | 'warning') => void;
     selectionChanged: () => void;
   };
+  initData: string;
   initDataUnsafe?: {
     user?: {
       id?: number;
+      username?: string;
+      first_name?: string;
+      last_name?: string;
+      photo_url?: string;
     };
   };
 }

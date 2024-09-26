@@ -10,13 +10,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    const result = await query('SELECT balance FROM users WHERE telegram_id = $1', [telegramId]);
-    
+    const result = await query('SELECT COALESCE(main_balance, 0) as main_balance FROM users WHERE telegram_id = $1', [telegramId]);
+
     if (result.rows.length === 0) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ balance: 0 }, { status: 200 });
     }
 
-    return NextResponse.json({ balance: result.rows[0].balance });
+    return NextResponse.json({ balance: result.rows[0].main_balance });
   } catch (error) {
     console.error('Database Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

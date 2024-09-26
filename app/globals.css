@@ -1,4 +1,9 @@
-/* Add this at the top of the file */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   user-select: none;
   -webkit-user-select: none;
@@ -7,12 +12,6 @@
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 body {
   @apply bg-black text-green-400 font-nokia overflow-hidden;
@@ -167,7 +166,6 @@ body {
   filter: url(#retro-filter);
 }
 
-/* Add this new animation at the end of the file */
 @keyframes closeScreen {
   0% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.1); opacity: 0.5; }
@@ -178,7 +176,6 @@ body {
   animation: closeScreen 0.5s forwards;
 }
 
-/* Add this at the end of the file */
 @keyframes slideDown {
   from {
     transform: translateY(-100%);
@@ -220,7 +217,6 @@ body {
   animation: slideDown 0.5s ease-out forwards;
 }
 
-/* Add these new animations at the end of the file */
 @keyframes float {
   0%, 100% { transform: translateY(0) translateX(0); }
   25% { transform: translateY(-20px) translateX(10px); }
@@ -240,4 +236,27 @@ body {
 
 .animate-float {
   animation: float 5s ease-in-out infinite;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes flip {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+}
+
+@keyframes stir {
+  0%, 100% { transform: translateX(-50%) rotate(45deg) scaleX(1); }
+  50% { transform: translateX(-50%) rotate(45deg) scaleX(-1); }
+}
+
+.animate-stir {
+  animation: stir 0.5s ease-in-out infinite;
 }

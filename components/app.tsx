@@ -15,8 +15,8 @@ import { Feedback } from './Feedback'
 import Earn from './Earn';
 import { InventoryItem } from '../types/inventory';
 import { BalanceProvider } from '../contexts/BalanceContext';
-
-// Remove the local InventoryItem type definition
+import { TelegramWebApp } from '../telegram';
+import { useBalance } from '../contexts/BalanceContext';
 
 // Custom RetroBattery component
 const RetroBattery = () => (
@@ -40,6 +40,12 @@ export function AppComponent() {
   const [isEasterEggActive, setIsEasterEggActive] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+  const { fetchBalances } = useBalance();
+
+  useEffect(() => {
+    fetchBalances();
+  }, [fetchBalances]);
+
   useEffect(() => {
     const checkTime = () => {
       const now = new Date();
@@ -51,6 +57,27 @@ export function AppComponent() {
 
     const interval = setInterval(checkTime, 1000); // Check every second
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    try {
+      const isTelegramWebAppAvailable = !!window.Telegram?.WebApp;
+      console.log('Is Telegram WebApp available:', isTelegramWebAppAvailable);
+
+      if (isTelegramWebAppAvailable && window.Telegram?.WebApp) {
+        const telegramWebApp = window.Telegram.WebApp;
+        telegramWebApp.ready();
+        telegramWebApp.expand();
+        
+        console.log('Telegram WebApp:', telegramWebApp);
+        console.log('Telegram WebApp initData:', telegramWebApp.initData);
+        console.log('Telegram WebApp initDataUnsafe:', telegramWebApp.initDataUnsafe);
+      } else {
+        console.warn('Telegram WebApp not found. Running in standalone mode.');
+      }
+    } catch (error) {
+      console.error('Error initializing Telegram WebApp:', error);
+    }
   }, []);
 
   const handleEnter = () => {
@@ -144,16 +171,16 @@ export function AppComponent() {
                   { icon: Star, label: 'Shop' },
                   { icon: User, label: 'Profile' },
                 ].map(({ icon: Icon, label }) => (
-                  <li key={label}>
+                  <li key={label} className="flex-1">
                     <button 
                       onClick={() => handleNavClick(label)}
-                      className={`flex flex-col items-center p-1 rounded pixelated transition-all duration-300 ${
+                      className={`w-full flex flex-col items-center justify-center p-3 rounded pixelated transition-all duration-300 ${
                         currentPage === label.toLowerCase() 
                           ? 'text-green-400 glow-text' 
                           : 'text-green-600 hover:text-green-400 hover:glow-text'
                       }`}
                     >
-                      <Icon size={16} />
+                      <Icon size={24} />
                       <span className="text-xs mt-1">{label}</span>
                     </button>
                   </li>

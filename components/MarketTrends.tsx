@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useBalance } from '../contexts/BalanceContext';
 
 interface Product {
   name: string;
@@ -11,6 +12,7 @@ interface Product {
 
 const MarketTrends: React.FC = () => {
   const { addNotification } = useNotifications();
+  const { mainBalance, updateMainBalance } = useBalance();
   const [products, setProducts] = useState<Product[]>([
     { name: 'Purple Haze', price: 500, change: 0, invested: 0 },
     { name: 'Crystal Blue', price: 800, change: 0, invested: 0 },
@@ -72,7 +74,7 @@ const MarketTrends: React.FC = () => {
   return (
     <div className="border border-green-400 p-4">
       <h2 className="text-lg font-bold mb-4 text-center">Street Value</h2>
-      <p className="text-center mb-4">Cash: ${cash.toFixed(2)}</p>
+      <p className="text-center mb-4">Cash: ${typeof mainBalance === 'number' ? mainBalance.toFixed(2) : '0.00'}</p>
       <div className="space-y-2">
         {products.map((product, index) => (
           <div key={index} className="flex justify-between items-center border-b border-green-400 py-2">

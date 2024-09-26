@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { User, Settings } from 'lucide-react';
+import { User, Settings, Share2 } from 'lucide-react';
 import Inventory from './Inventory';
-import { TelegramWebApp } from '../telegram'; // Add this import
-
-// Remove the global declaration
+import { TelegramWebApp } from '../telegram';
+import { useBalance } from '../contexts/BalanceContext';
 
 interface UserProfileProps {
   isOpen: boolean;
@@ -14,10 +13,11 @@ interface UserProfileProps {
 
 interface UserData {
   id: number;
-  
   username: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
+  photo_url: string | null;
+  referral_code: string;
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, triggerEasterEgg }) => {
@@ -25,26 +25,43 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const { mainBalance, drugMoneyBalance, clickerInventory } = useBalance();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
         const telegramWebApp = window.Telegram?.WebApp as TelegramWebApp | undefined;
-        const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
-        if (!telegramUserId) {
+        const user = telegramWebApp?.initDataUnsafe?.user;
+        console.log('Telegram User:', user);
+
+        if (!user?.id) {
           throw new Error('Telegram user ID not found');
         }
+
         const response = await fetch('/api/user/check-or-create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ telegramId: telegramUserId }),
+          body: JSON.stringify({
+            telegramId: user.id,
+            username: user.username || '',
+            firstName: user.first_name || '',
+            lastName: user.last_name || '',
+            photoUrl: user.photo_url || ''
+          }),
         });
-        if (!response.ok) throw new Error('Failed to fetch user data');
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch user data');
+        }
+        
         const data = await response.json();
+        console.log('Received user data:', data.user);
         setUserData(data.user);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setError('Failed to load user data');
+        setError(error instanceof Error ? error.message : 'An unknown error occurred');
       } finally {
         setLoading(false);
       }
@@ -54,6 +71,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
       fetchUserData();
     }
   }, [isOpen]);
+
+  const getInitials = (firstName: string, lastName: string) => {
+    const firstInitial = firstName ? firstName.charAt(0) : '';
+    const lastInitial = lastName ? lastName.charAt(0) : '';
+    return (firstInitial + lastInitial).toUpperCase();
+  };
 
   if (!isOpen) return null;
 
@@ -72,16 +95,49 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
                 <Settings size={24} />
               </button>
             </div>
-            
+
             <div className="mb-6 text-center">
-              <User size={64} className="mx-auto mb-2 text-green-400" />
-              <h3 className="text-green-400 text-xl">{userData.firstName} {userData.lastName}</h3>
+              <div className="w-24 h-24 rounded-full border-2 border-green-400 mx-auto mb-2 overflow-hidden flex items-center justify-center">
+                {userData.photo_url ? (
+                  <img 
+                    src={userData.photo_url} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Error loading profile picture:', e);
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-green-900 flex items-center justify-center text-green-400 text-2xl font-bold">
+                    {getInitials(userData.first_name, userData.last_name)}
+                  </div>
+                )}
+              </div>
+              <h3 className="text-green-400 text-xl">{userData.first_name} {userData.last_name}</h3>
               <p className="text-green-600">@{userData.username}</p>
             </div>
 
             <div className="mb-6">
               <h4 className="text-green-400 mb-2">Inventory</h4>
               <Inventory items={inventory} isOpen={true} onClose={() => {}} triggerEasterEgg={triggerEasterEgg} />
+            </div>
+
+            <div className="mb-6">
+              <h4 className="text-green-400 mb-2">Referral Code</h4>
+              <div className="flex items-center justify-between bg-green-900 bg-opacity-20 p-1">
+                <code className="text-sm">{userData.referral_code}</code>
+                <button className="text-green-400">
+                  <Share2 size={16} />
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h4 className="text-green-400 mb-2">Balances</h4>
+              <p>Main Balance: ${typeof mainBalance === 'number' ? mainBalance.toFixed(2) : '0.00'}</p>
+              <p>Drug Money: ${typeof drugMoneyBalance === 'number' ? drugMoneyBalance.toFixed(2) : '0.00'}</p>
+              <p>Drug Inventory: {clickerInventory}</p>
             </div>
           </>
         ) : (
