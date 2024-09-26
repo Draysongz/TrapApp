@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react'
 import { Trophy, Star, Zap, Users, User, Satellite } from "lucide-react"
