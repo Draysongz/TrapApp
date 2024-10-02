@@ -34,6 +34,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
         const telegramWebApp = window.Telegram?.WebApp as TelegramWebApp | undefined;
         const user = telegramWebApp?.initDataUnsafe?.user;
          const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+         alert(telegramId)
         console.log('Telegram User:', user);
 
 
@@ -42,11 +43,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({telegramId }),
+        body: JSON.stringify({telegramId}),
       });
 
       const data = await response.json();
         console.log('Received user data:', data.user);
+        alert(data.user.telegram_id)
         setUserData(data.user);
       } catch (error) {
         console.error('Error fetching user data:', error);
