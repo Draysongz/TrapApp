@@ -47,6 +47,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
           }),
         });
 
+        alert(response.json())
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || 'Failed to fetch user data');
