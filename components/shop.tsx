@@ -109,7 +109,7 @@ export function Shop() {
     <div className="relative flex flex-col h-full">
       {/* Coming Soon Overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-50 z-20 flex items-center justify-center">
-        <div className="text-white text-4xl font-bold mt-40 ">Coming Soon</div>
+        <div className="text-white text-4xl font-bold mt-40 text-green-400 ">Coming Soon</div>
       </div>
       
 
