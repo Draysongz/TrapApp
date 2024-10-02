@@ -62,7 +62,7 @@ export function AppComponent() {
 
   useEffect(() => {
     try {
-      const isTelegramWebAppAvailable = !!window.Telegram?.WebApp;
+      const isTelegramWebAppAvailable = window.Telegram?.WebApp;
       console.log('Is Telegram WebApp available:', isTelegramWebAppAvailable);
 
       if (isTelegramWebAppAvailable && window.Telegram?.WebApp) {
