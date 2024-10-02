@@ -39,7 +39,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
           throw new Error('Telegram user ID not found');
         }
 
-        const response = await fetch('/api/user/check-or-create', {
+        const response = await fetch('/api/user/fetchUser', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
