@@ -33,28 +33,19 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
         setLoading(true);
         const telegramWebApp = window.Telegram?.WebApp as TelegramWebApp | undefined;
         const user = telegramWebApp?.initDataUnsafe?.user;
+        const telegramId = user?.id
         console.log('Telegram User:', user);
 
-        if (!user?.id) {
-          throw new Error('Telegram user ID not found');
-        }
 
-        const response = await fetch('/api/user/fetchUser', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            telegramId: user.id,
-          }),
-        });
+       const response = await fetch('/api/user/fetchUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({telegramId }),
+      });
 
-        alert(response.json())
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch user data');
-        }
-        
-        const data = await response.json();
+      const data = await response.json();
         console.log('Received user data:', data.user);
         setUserData(data.user);
       } catch (error) {
