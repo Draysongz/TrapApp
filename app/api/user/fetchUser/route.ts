@@ -30,7 +30,7 @@ async function fetchUser(telegramId: string) {
 
 
 // Notify via Pusher
-async function notifyUserFetched(user: any) {
+async function notifyUserFetched(user) {
   await pusher.trigger('my-channel', 'user-fetched', {
     user: user,
   });
