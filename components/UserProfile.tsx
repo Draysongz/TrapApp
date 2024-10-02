@@ -44,10 +44,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             telegramId: user.id,
-            username: user.username || '',
-            firstName: user.first_name || '',
-            lastName: user.last_name || '',
-            photoUrl: user.photo_url || ''
           }),
         });
 
