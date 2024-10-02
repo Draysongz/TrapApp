@@ -83,7 +83,7 @@ export function AppComponent() {
 
 
   useEffect(()=>{
-    const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id!
+    const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id!!
     setUserId(telegramId.toString())
   })
 
