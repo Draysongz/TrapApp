@@ -33,7 +33,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
         setLoading(true);
         const telegramWebApp = window.Telegram?.WebApp as TelegramWebApp | undefined;
         const user = telegramWebApp?.initDataUnsafe?.user;
-        const telegramId = user?.id
+         const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
         console.log('Telegram User:', user);
 
 
