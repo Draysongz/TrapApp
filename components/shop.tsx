@@ -106,7 +106,16 @@ export function Shop() {
   }
 
   return (
-    <div className="space-y-4 pt-8"> {/* Added pt-8 for top padding */}
+    <div className="relative flex flex-col h-full">
+      {/* Coming Soon Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 z-20 flex items-center justify-center">
+        <div className="text-white text-4xl font-bold mt-40 ">Coming Soon</div>
+      </div>
+      
+
+
+
+      <div className="blur-sm z-10">
       <h2 className="text-lg font-bold">Re-up Shop</h2>
       <div className="flex items-center justify-between border border-green-400 p-2 mb-4">
         <span>Cash:</span>
@@ -157,6 +166,7 @@ export function Shop() {
           </div>
         ))}
       </div>
+    </div>
     </div>
   )
 }

@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const TypingText: React.FC<{ text: string }> = ({ text }) => {
+const TypeWriter = ({ text, speed = 100 }) => {
   const [displayedText, setDisplayedText] = useState('');
+  const i = useRef(0); // Using useRef to keep track of the current index
 
   useEffect(() => {
-    let i = 0;
     const interval = setInterval(() => {
-      if (i < text.length) {
-        setDisplayedText(prev => prev + text[i]);
-        i++;
+      if (i.current < text.length) {
+        setDisplayedText((prev) => prev + text.charAt(i.current)); // Append the next character
+        i.current++; // Move to the next character
       } else {
-        clearInterval(interval);
+        clearInterval(interval); // Clear interval once the text is fully typed
       }
-    }, 100);
+    }, speed);
 
+    // Cleanup function to clear the interval
     return () => clearInterval(interval);
-  }, [text]);
+  }, [text, speed]);
 
-  return <span>{displayedText}</span>;
+  return <div>{displayedText}</div>; // Display the typed text
 };
 
-export default TypingText;
+export default TypeWriter;

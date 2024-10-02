@@ -39,6 +39,7 @@ export function AppComponent() {
   const [inventory, /* setInventory */] = useState<InventoryItem[]>([]);
   const [isEasterEggActive, setIsEasterEggActive] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [userId, setUserId] = useState("")
 
   const { fetchBalances } = useBalance();
 
@@ -80,6 +81,13 @@ export function AppComponent() {
     }
   }, []);
 
+
+  useEffect(()=>{
+    const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id!
+    setUserId(telegramId.toString())
+  })
+
+  // const userId= '2146305061'
   const handleEnter = () => {
     setIsClosing(true)
     setTimeout(() => {
@@ -100,7 +108,7 @@ export function AppComponent() {
       case 'friends':
         return (
           <div className="space-y-8">
-            <Referrals />
+            <Referrals userId={userId}/>
             <RetroChat />
           </div>
         )

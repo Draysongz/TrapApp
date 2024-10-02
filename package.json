@@ -11,16 +11,22 @@
     "insert-test-data": "ts-node -r dotenv/config insert-test-data.ts"
   },
   "dependencies": {
+    "@prisma/client": "^5.20.0",
     "@radix-ui/react-icons": "^1.3.0",
     "@vercel/postgres": "^0.10.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "lucide-react": "^0.441.0",
+    "mongoose": "^8.7.0",
     "next": "14.2.12",
     "node-telegram-bot-api": "^0.63.0",
+    "prisma": "^5.20.0",
+    "pusher": "^5.2.0",
+    "pusher-js": "^8.4.0-rc2",
     "react": "^18",
     "react-dom": "^18",
+    "react-typed": "^2.0.12",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
