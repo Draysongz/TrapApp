@@ -41,8 +41,8 @@ export function Leaderboard() {
   return (
     <div className="relative space-y-4">
       {/* Coming Soon Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-50 z-20 flex items-center justify-center ">
-        <div className="text-white text-4xl font-bold mt-40 text-green-400">Coming Soon</div>
+      <div className="absolute inset-0 bg-black bg-opacity-50 z-20 flex items-center justify-center text-green-400">
+        <div className="text-4xl font-bold mt-40 text-green-400">Coming Soon</div>
       </div>
 
       {/* Apply blur effect to the leaderboard */}

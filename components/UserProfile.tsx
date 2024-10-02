@@ -46,7 +46,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({telegramId : userId}),
+        body: JSON.stringify({telegramId : userId?.toString()}),
       });
 
       const data = await response.json();
