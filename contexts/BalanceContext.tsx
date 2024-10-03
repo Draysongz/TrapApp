@@ -40,7 +40,7 @@ interface BalanceProviderProps {
 export const BalanceProvider: React.FC<BalanceProviderProps>  = ({ userId, children }) => {
   const [mainBalance, setMainBalance] = useState<number>(0);
   const [drugMoneyBalance, setDrugMoneyBalance] = useState<number>(0);
-  const [energy, setEnergy] = useState<number>(100);
+  const [energy, setEnergy] = useState<number>(0);
   const [clickerInventory, setClickerInventory] = useState<number>(0);
   const maxEnergy = 100;
 
