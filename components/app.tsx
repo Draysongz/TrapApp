@@ -39,7 +39,7 @@ export function AppComponent() {
   const [inventory, /* setInventory */] = useState<InventoryItem[]>([]);
   const [isEasterEggActive, setIsEasterEggActive] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  // const [userId, setUserId] = useState("")
+  const [userId, setUserId] = useState("")
 
   const { fetchBalances } = useBalance();
 
@@ -82,15 +82,15 @@ export function AppComponent() {
   }, []);
 
 
-  // useEffect(()=>{
-  //   const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
-  //   if(telegramId){
-  //     setUserId(telegramId.toString())
-  //   }
+  useEffect(()=>{
+    const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+    if(telegramId){
+      setUserId(telegramId.toString())
+    }
     
-  // })
+  })
 
-  const userId= '2146305061'
+  // const userId= '2146305061'
   const handleEnter = () => {
     setIsClosing(true)
     setTimeout(() => {
