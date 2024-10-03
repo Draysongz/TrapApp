@@ -55,6 +55,7 @@ const DrugLabClicker: React.FC = () => {
   const [isShaking, setIsShaking] = useState(false);
   const [showSellModal, setShowSellModal] = useState(false);
   const [showLaunderModal, setShowLaunderModal] = useState(false);
+  const [newEnergy, setNewEnergy] = useState(0)
   const [lastLaunderTime, setLastLaunderTime] = useState(Date.now());
   const [hasLaunderedBefore, setHasLaunderedBefore] = useState(false);
   const { 
@@ -70,6 +71,10 @@ const DrugLabClicker: React.FC = () => {
   } = useBalance();
   const { addNotification } = useNotifications();
   const [isFlipping, setIsFlipping] = useState(false);
+
+  useEffect(()=>{
+    setNewEnergy(energy)
+  }, [energy])
 
   useEffect(() => {
     fetchBalances();
@@ -188,9 +193,9 @@ const DrugLabClicker: React.FC = () => {
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span>Energy:</span>
-          <span>{energy}/{maxEnergy}</span>
+          <span>{newEnergy}/{maxEnergy}</span>
         </div>
-        <EnergyBar energy={energy} maxEnergy={maxEnergy} />
+        <EnergyBar energy={newEnergy} maxEnergy={maxEnergy} />
         
         <div className="flex justify-between text-sm">
           <span>Risk:</span>

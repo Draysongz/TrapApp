@@ -31,14 +31,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ isOpen, onClose, inventory, t
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        // const telegramWebApp = window.Telegram?.WebApp as TelegramWebApp | undefined;
-        // const user = telegramWebApp?.initDataUnsafe?.user;
-        //  const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+        const telegramWebApp = window.Telegram?.WebApp as TelegramWebApp | undefined;
+        const user = telegramWebApp?.initDataUnsafe?.user;
+         const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
        
         
-        // console.log('Telegram User:', user);
+        console.log('Telegram User:', user);
 
-        const userId= '2146305061'
+        // const userId= '2146305061'
 
 
        const response = await fetch('/api/user/fetchUser', {
