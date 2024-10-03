@@ -32,7 +32,12 @@ export const useBalance = () => {
   return context;
 };
 
-export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface BalanceProviderProps {
+  userId: string; // Accept userId as a prop
+  children: React.ReactNode;
+}
+
+export const BalanceProvider: React.FC<BalanceProviderProps>  = ({ userId, children }) => {
   const [mainBalance, setMainBalance] = useState<number>(0);
   const [drugMoneyBalance, setDrugMoneyBalance] = useState<number>(0);
   const [energy, setEnergy] = useState<number>(100);
@@ -40,15 +45,14 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const maxEnergy = 100;
 
   // const telegramUserId = '2146305061'
-   const telegramWebApp = window.Telegram?.WebApp;
-  const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
-  alert(telegramUserId)
+  const telegramUserId = userId
+  alert(userId)
+  
 
   // Function to fetch balances using the API route
   const fetchBalances = useCallback(async () => {
     try {
-     
-
+      
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
         return;

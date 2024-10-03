@@ -138,7 +138,7 @@ export function AppComponent() {
   }
 
   return (
-    <BalanceProvider>
+    <BalanceProvider userId={userId}>
       <NotificationProvider>
         <Feedback>
           <div className={`flex flex-col h-screen bg-black text-green-400 font-nokia relative overflow-hidden ${isOn ? 'turn-on' : ''}`}>
