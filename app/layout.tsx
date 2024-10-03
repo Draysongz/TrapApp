@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { BalanceProvider } from '../contexts/BalanceContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
+import { useState } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,10 +17,21 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const [userId, setUserId] = useState("")
+
+
+    useEffect(()=>{
+    const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
+    if(telegramId){
+      setUserId(telegramId.toString())
+    }
+    
+  })
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <BalanceProvider>
+        <BalanceProvider userId={userId}>
           <NotificationProvider>
             {children}
           </NotificationProvider>
