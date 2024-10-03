@@ -17,16 +17,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [userId, setUserId] = useState("")
-
-
-    useEffect(()=>{
-    const telegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id
-    if(telegramId){
-      setUserId(telegramId.toString())
-    }
-    
-  })
+ 
 
   return (
     <html lang="en">
