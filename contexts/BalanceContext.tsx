@@ -46,7 +46,7 @@ export const BalanceProvider: React.FC<BalanceProviderProps>  = ({ userId, child
 
   // const telegramUserId = '2146305061'
   const telegramUserId = userId
-  alert(userId)
+  
   
 
   // Function to fetch balances using the API route
