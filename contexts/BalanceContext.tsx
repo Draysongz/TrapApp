@@ -39,11 +39,15 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [clickerInventory, setClickerInventory] = useState<number>(0);
   const maxEnergy = 100;
 
+  // const telegramUserId = '2146305061'
+   const telegramWebApp = window.Telegram?.WebApp;
+  const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+  alert(telegramUserId)
+
   // Function to fetch balances using the API route
   const fetchBalances = useCallback(async () => {
     try {
-      const telegramWebApp = window.Telegram?.WebApp;
-      const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+     
 
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
@@ -75,8 +79,8 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
 
 
-    const telegramWebApp = window.Telegram?.WebApp;
-    const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+    // const telegramWebApp = window.Telegram?.WebApp;
+    // const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
     
     if (telegramUserId) {
       // Subscribe to the user's channel for real-time updates
@@ -103,8 +107,8 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Function to update the main balance
   const updateMainBalance = useCallback(async (amount: number) => {
     try {
-      const telegramWebApp = window.Telegram?.WebApp;
-      const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+      // const telegramWebApp = window.Telegram?.WebApp;
+      // const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
 
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
@@ -131,8 +135,8 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Function to update drug money balance
   const updateDrugMoneyBalance = useCallback(async (amount: number) => {
     try {
-      const telegramWebApp = window.Telegram?.WebApp;
-      const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+      // const telegramWebApp = window.Telegram?.WebApp;
+      // const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
 
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
@@ -165,8 +169,8 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Function to update energy
   const updateEnergy = useCallback(async (amount: number) => {
     try {
-      const telegramWebApp = window.Telegram?.WebApp;
-      const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+      // const telegramWebApp = window.Telegram?.WebApp;
+      // const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
 
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
@@ -201,8 +205,8 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Function to update clicker inventory
   const updateClickerInventory = useCallback(async (amount: number) => {
     try {
-      const telegramWebApp = window.Telegram?.WebApp;
-      const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+      // const telegramWebApp = window.Telegram?.WebApp;
+      // const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
 
       if (!telegramUserId) {
         console.error('Telegram user ID not found');

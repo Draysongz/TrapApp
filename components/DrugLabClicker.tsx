@@ -60,8 +60,8 @@ const DrugLabClicker: React.FC = () => {
   const { 
     drugMoneyBalance, 
     updateDrugMoneyBalance, 
-    energy, 
-    maxEnergy, 
+      energy,
+      maxEnergy,
     updateEnergy, 
     refillEnergy, 
     fetchBalances, 
