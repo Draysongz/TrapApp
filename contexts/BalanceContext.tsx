@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import Pusher from 'pusher-js'; // Import Pusher client
 
 interface BalanceContextType {
   mainBalance: number;
@@ -12,10 +13,14 @@ interface BalanceContextType {
   updateDrugMoneyBalance: (amount: number) => Promise<void>;
   updateBothBalances: (drugMoneyAmount: number, mainAmount: number) => Promise<void>;
   updateEnergy: (amount: number) => Promise<void>;
-  refillEnergy: () => Promise<void>; // Add this line
+  refillEnergy: () => Promise<void>;
   updateClickerInventory: (amount: number) => Promise<void>;
   fetchBalances: () => Promise<void>;
 }
+
+    const pusher = new Pusher('d70648a990c9399479e1', {
+      cluster: 'eu',
+    });
 
 const BalanceContext = createContext<BalanceContextType | undefined>(undefined);
 
@@ -34,14 +39,18 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [clickerInventory, setClickerInventory] = useState<number>(0);
   const maxEnergy = 100;
 
+  // Function to fetch balances using the API route
   const fetchBalances = useCallback(async () => {
     try {
       const telegramWebApp = window.Telegram?.WebApp;
       const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
         return;
       }
+
+      // Use the new API route to fetch balances
       const response = await fetch(`/api/user/balances?telegramId=${telegramUserId}`);
       
       if (response.ok) {
@@ -62,19 +71,52 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     fetchBalances();
   }, [fetchBalances]);
 
+  // Initialize Pusher and subscribe to balance updates
+  useEffect(() => {
+
+
+    const telegramWebApp = window.Telegram?.WebApp;
+    const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+    
+    if (telegramUserId) {
+      // Subscribe to the user's channel for real-time updates
+      const channel = pusher.subscribe(`user-${telegramUserId}`);
+
+      // Listen for 'balance-updated' event
+      channel.bind('balance-updated', (data: any) => {
+        if (data.mainBalance !== undefined) setMainBalance(Number(data.mainBalance));
+        if (data.drugMoneyBalance !== undefined) setDrugMoneyBalance(Number(data.drugMoneyBalance));
+        if (data.energy !== undefined) setEnergy(Number(data.energy));
+        if (data.clickerInventory !== undefined) setClickerInventory(Number(data.clickerInventory));
+      });
+    }
+
+    // Clean up the Pusher connection when the component unmounts
+    return () => {
+      if (telegramUserId) {
+        pusher.unsubscribe(`user-${telegramUserId}`);
+      }
+      pusher.disconnect();
+    };
+  }, []);
+
+  // Function to update the main balance
   const updateMainBalance = useCallback(async (amount: number) => {
     try {
       const telegramWebApp = window.Telegram?.WebApp;
       const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
         return;
       }
+
       const response = await fetch('/api/user/update-main-balance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ telegramId: telegramUserId, amount }),
       });
+
       if (response.ok) {
         const data = await response.json();
         setMainBalance(data.newBalance);
@@ -86,19 +128,23 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
+  // Function to update drug money balance
   const updateDrugMoneyBalance = useCallback(async (amount: number) => {
     try {
       const telegramWebApp = window.Telegram?.WebApp;
       const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
         return;
       }
+
       const response = await fetch('/api/user/update-drug-money-balance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ telegramId: telegramUserId, amount }),
       });
+
       if (response.ok) {
         const data = await response.json();
         setDrugMoneyBalance(data.newBalance);
@@ -113,22 +159,26 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const updateBothBalances = useCallback(async (drugMoneyAmount: number, mainAmount: number) => {
     await updateDrugMoneyBalance(drugMoneyAmount);
     await updateMainBalance(mainAmount);
-    await fetchBalances(); // Add this line to refresh balances after updating
+    await fetchBalances();
   }, [updateDrugMoneyBalance, updateMainBalance, fetchBalances]);
 
+  // Function to update energy
   const updateEnergy = useCallback(async (amount: number) => {
     try {
       const telegramWebApp = window.Telegram?.WebApp;
       const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
         return;
       }
+
       const response = await fetch('/api/user/update-energy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ telegramId: telegramUserId, amount }),
       });
+
       if (response.ok) {
         const data = await response.json();
         setEnergy(data.newEnergy);
@@ -140,6 +190,7 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
+  // Function to refill energy
   const refillEnergy = useCallback(async () => {
     const energyToRefill = maxEnergy - energy;
     if (energyToRefill > 0) {
@@ -147,19 +198,23 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [energy, maxEnergy, updateEnergy]);
 
+  // Function to update clicker inventory
   const updateClickerInventory = useCallback(async (amount: number) => {
     try {
       const telegramWebApp = window.Telegram?.WebApp;
       const telegramUserId = telegramWebApp?.initDataUnsafe?.user?.id;
+
       if (!telegramUserId) {
         console.error('Telegram user ID not found');
         return;
       }
+
       const response = await fetch('/api/user/update-clicker-inventory', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ telegramId: telegramUserId, amount }),
       });
+
       if (response.ok) {
         const data = await response.json();
         setClickerInventory(data.newInventory);
@@ -172,19 +227,19 @@ export const BalanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   return (
-    <BalanceContext.Provider value={{ 
-      mainBalance, 
-      drugMoneyBalance, 
-      energy, 
-      maxEnergy, 
+    <BalanceContext.Provider value={{
+      mainBalance,
+      drugMoneyBalance,
+      energy,
+      maxEnergy,
       clickerInventory,
-      updateMainBalance, 
+      updateMainBalance,
       updateDrugMoneyBalance,
-      updateBothBalances, 
+      updateBothBalances,
       updateEnergy,
-      refillEnergy, // Add this line
+      refillEnergy,
       updateClickerInventory,
-      fetchBalances 
+      fetchBalances
     }}>
       {children}
     </BalanceContext.Provider>

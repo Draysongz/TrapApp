@@ -40,12 +40,14 @@ const Earn: React.FC = () => {
   return (
     <div className="relative flex flex-col h-full">
       {/* Coming Soon Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-50 z-20 flex items-center justify-center text-green-400">
+      {/* <div className="absolute inset-0 bg-black bg-opacity-50 z-20 flex items-center justify-center text-green-400">
         <div className="text-4xl font-bold mb-40 ">Coming Soon</div>
-      </div>
+      </div> */}
 
       {/* Apply blur effect to the content */}
-      <div className="blur-sm z-10">
+      <div 
+      // className="blur-sm z-10"
+      >
         <DailyRewards />
         <div className="mt-6"></div>
         <div className="flex-grow overflow-hidden flex flex-col">
