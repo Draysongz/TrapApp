@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useEffect } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -33,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <BalanceProvider userId={userId}>
+        <BalanceProvider>
           <NotificationProvider>
             {children}
           </NotificationProvider>

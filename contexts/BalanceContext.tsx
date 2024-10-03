@@ -33,7 +33,7 @@ export const useBalance = () => {
 };
 
 interface BalanceProviderProps {
-  userId: string; // Accept userId as a prop
+  userId?: string; // Accept userId as a prop
   children: React.ReactNode;
 }
 
